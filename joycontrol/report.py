@@ -103,14 +103,18 @@ class InputReport:
     def get_ack(self):
         return self.data[14]
 
-    def set_6axis_data(self):
+    def set_6axis_data(self, accel_bytes, gyro_bytes):
         """
         Set accelerator and gyro of 0x30 input reports
         TODO
         """
-        # HACK: Set all 0 for now
-        for i in range(14, 50):
-            self.data[i] = 0x00
+        
+        self.data[14:20] = accel_bytes
+        self.data[20:26] = gyro_bytes
+        self.data[26:32] = accel_bytes
+        self.data[32:38] = gyro_bytes
+        self.data[38:44] = accel_bytes
+        self.data[44:50] = gyro_bytes
 
     def set_ir_nfc_data(self, data):
         if 50 + len(data) > len(self.data):

@@ -1,4 +1,5 @@
 import asyncio
+import math
 
 from joycontrol import utils
 from joycontrol.controller import Controller
@@ -43,6 +44,10 @@ class ControllerState:
             self.r_stick_state = StickState(calibration=calibration)
             if calibration is not None:
                 self.r_stick_state.set_center()
+
+        if controller in (Controller.PRO_CONTROLLER, Controller.JOYCON_R):
+            #TODO load calibrationdata from memory
+            self.axis_state = AxisState()
 
         self.sig_is_send = asyncio.Event()
 
@@ -378,3 +383,53 @@ class StickState:
         byte_3 = self._v_stick >> 4
         assert all(0 <= byte <= 0xFF for byte in (byte_1, byte_2, byte_3))
         return bytes((byte_1, byte_2, byte_3))
+
+class AxisState:
+    def __init__(self):
+        self.accel = bytearray(6)
+        self.gyro = bytearray(6)
+
+        self.dx, self.dy = 0, 0
+        self.sum_y = 0
+
+    def set_accel(self,ax:int,ay:int,az:int):
+        """
+        Args:
+            ax (int): signed int 2bytes
+            ay (int): signed int 2bytes
+            az (int): signed int 2bytes
+        """
+        self.accel[0:2] = ax.to_bytes(2,byteorder="little",singed=True)
+        self.accel[2:4] = ay.to_bytes(2,byteorder="little",singed=True)
+        self.accel[4:6] = az.to_bytes(2,byteorder="little",singed=True)
+
+    def get_accel(self):
+        return self.accel
+
+    def get_gyro(self):
+        gyro = [0, 0, 0]
+        r = 2048
+
+        rh = math.atan2(self.sum_y,r)
+
+        dR = 0.0
+        dP = math.atan2(self.dy,r)
+        dY = -self.dx/r
+
+        rho = rh-dP
+
+        omegaX =  - math.sin(rho)*dY
+        omegaY = dP
+        omegaZ = math.cos(rho)*dY
+
+        gyro[0] = int(omegaX*65535.0*3/math.pi)
+        gyro[1] = int(omegaY*65535.0*3/math.pi)
+        gyro[2] = int(omegaZ*65535.0*3/math.pi)
+        self.gyro[0:2] = gyro[0].to_bytes(2,byteorder="little",signed=True)
+        self.gyro[2:4] = gyro[1].to_bytes(2,byteorder="little",signed=True)
+        self.gyro[4:6] = gyro[2].to_bytes(2,byteorder="little",signed=True)
+
+        self.dx, self.dy = 0, 0
+
+        return self.gyro
+

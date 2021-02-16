@@ -43,19 +43,19 @@ class KMI():
                 # mouse movement
                 if event.type == ecodes.EV_REL:
                     if event.code == ecodes.REL_X:
-                        dx = event.val
+                        dx = event.value
                         self.controller_state.axis_state.dx += dx
                     elif event.code == ecodes.REL_Y:
-                        dy = event.val
+                        dy = event.value
                         self.controller_state.axis_state.dy += dy
                         self.controller_state.axis_state.sum_y += dy
 
                 # mouse click
                 if event.type == ecodes.EV_KEY:
                     push = True
-                    if event.val == 0x01:#key down
+                    if event.value == 0x01:#key down
                         pushed = True
-                    elif event.val == 0x00:
+                    elif event.value == 0x00:
                         pushed = False
     
                     #left click -> ZR
@@ -73,56 +73,56 @@ class KMI():
                 # key input
                 if event.type == ecodes.EV_KEY:
                     push = True
-                    if event.val == 0x01:#key down
+                    if event.value == 0x01:#key down
                         pushed = True
-                    elif event.val == 0x00:
+                    elif event.value == 0x00:
                         pushed = False
 
                     #WASD -> up, left, right, down
-                    if event.code == ecode.KEY_W:
+                    if event.code == ecodes.KEY_W:
                         self.lstick_state.set_up()
-                    elif event.code == ecode.KEY_A:
+                    elif event.code == ecodes.KEY_A:
                         self.lstick_state.set_left()
-                    elif event.code == ecode.KEY_S:
+                    elif event.code == ecodes.KEY_S:
                         self.lstick_state.set_right()
-                    elif event.code == ecode.KEY_D:
+                    elif event.code == ecodes.KEY_D:
                         self.lstick_state.set_down()
 
                     #FVE -> a,b,x
-                    elif event.code == ecode.KEY_F:
+                    elif event.code == ecodes.KEY_F:
                         self.button_state.a(push)
-                    elif event.code == ecode.KEY_V:
+                    elif event.code == ecodes.KEY_V:
                         self.button_state.b(push)
-                    elif event.code == ecode.KEY_E:
+                    elif event.code == ecodes.KEY_E:
                         self.button_state.x(push)
 
                     #TG -> rstick, lstick
-                    elif event.code == ecode.KEY_T:
+                    elif event.code == ecodes.KEY_T:
                         self.button_state.sl(push)
-                    elif event.code == ecode.KEY_G:
+                    elif event.code == ecodes.KEY_G:
                         self.button_state.sr(push)
                     #QR -> l,r
-                    elif event.code == ecode.KEY_Q:
+                    elif event.code == ecodes.KEY_Q:
                         self.button_state.l(push)
-                    elif event.code == ecode.KEY_R:
+                    elif event.code == ecodes.KEY_R:
                         self.button_state.r(push)
                     #ZX -> plus, minus
-                    elif event.code == ecode.KEY_Z:
+                    elif event.code == ecodesKEY_Z:
                         self.button_state.plus(push)
-                    elif event.code == ecode.KEY_X:
+                    elif event.code == ecodes.KEY_X:
                         self.button_state.minus(push)
                     #TAB -> zl
-                    elif event.code == ecode.KEY_TAB:
+                    elif event.code == ecodes.KEY_TAB:
                         self.button_state.zl(push)
                     #SPACE -> b
-                    elif event.code == ecode.KEY_SPACE:
+                    elif event.code == ecodes.KEY_SPACE:
                         self.button_state.b(push)
                     #esc -> home
-                    elif event.code == ecode.KEY_ESC:
+                    elif event.code == ecodes.KEY_ESC:
                         self.button_state.home(push)
 
                     #del -> break
-                    elif event.code == ecode.KEY_DELETE:
+                    elif event.code == ecodes.KEY_DELETE:
                         self.mouse.ungrab()
                         termios.tcsetattr(sys.stdin.fileno(),termios.TCSANOW,self.old)
                         return

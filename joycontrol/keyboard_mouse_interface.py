@@ -35,23 +35,23 @@ class KMI():
 
     async def run(self):
         while True:
-            minput = await self.mouse.async_read()
-            kinput = await self.keyboard.async_read()
+            minput = await self.mouse.async_read_one()
+            kinput = await self.keyboard.async_read_one()
 
             # parse mouse event
             if minput is not None:
                 # mouse movement
                 if event.type == ecodes.EV_REL:
-                    if event.code = ecodes.REL_X:
+                    if event.code == ecodes.REL_X:
                         dx = event.val
                         self.controller_state.axis_state.dx += dx
-                    elif event.code = ecodes.REL_Y:
+                    elif event.code == ecodes.REL_Y:
                         dy = event.val
                         self.controller_state.axis_state.dy += dy
                         self.controller_state.axis_state.sum_y += dy
 
                 # mouse click
-                if event.type = ecodes.EV_KEY:
+                if event.type == ecodes.EV_KEY:
                     push = True
                     if event.val == 0x01:#key down
                         pushed = True
@@ -60,7 +60,7 @@ class KMI():
     
                     #left click -> ZR
                     if event.code == ecode.BTN_LEFT:
-                            self.button_state.zr(push)
+                        self.button_state.zr(push)
                     #right click -> ZL
                     elif event.code == ecode.BTN_RIGHT:
                         self.button_state.zl(not push)

@@ -332,7 +332,7 @@ class StickState:
         """
         if self._calibration is None:
             raise ValueError('No calibration data available.')
-        self._h_stick = self._calibration.h_center
+        #self._h_stick = self._calibration.h_center
         self._v_stick = self._calibration.v_center + self._calibration.v_max_above_center
 
     def set_down(self):
@@ -341,7 +341,7 @@ class StickState:
         """
         if self._calibration is None:
             raise ValueError('No calibration data available.')
-        self._h_stick = self._calibration.h_center
+        #self._h_stick = self._calibration.h_center
         self._v_stick = self._calibration.v_center - self._calibration.v_max_below_center
 
     def set_left(self):
@@ -351,7 +351,7 @@ class StickState:
         if self._calibration is None:
             raise ValueError('No calibration data available.')
         self._h_stick = self._calibration.h_center - self._calibration.h_max_below_center
-        self._v_stick = self._calibration.v_center
+        #self._v_stick = self._calibration.v_center
 
     def set_right(self):
         """
@@ -360,7 +360,7 @@ class StickState:
         if self._calibration is None:
             raise ValueError('No calibration data available.')
         self._h_stick = self._calibration.h_center + self._calibration.h_max_above_center
-        self._v_stick = self._calibration.v_center
+        #self._v_stick = self._calibration.v_center
 
     def set_calibration(self, calibration):
         self._calibration = calibration
@@ -403,7 +403,14 @@ class AxisState:
         self.accel[2:4] = ay.to_bytes(2,byteorder="little",singed=True)
         self.accel[4:6] = az.to_bytes(2,byteorder="little",singed=True)
 
+    def get_6axis(self):
+        acc,gyro =  self.get_accel(), self.get_gyro()
+        return acc,gyro
     def get_accel(self):
+        accel = [100,100,100]
+        self.accel[0:2] = accel[0].to_bytes(2,byteorder="little",signed=True)
+        self.accel[2:4] = accel[1].to_bytes(2,byteorder="little",signed=True)
+        self.accel[4:6] = accel[2].to_bytes(2,byteorder="little",signed=True)
         return self.accel
 
     def get_gyro(self):
@@ -425,6 +432,9 @@ class AxisState:
         gyro[0] = int(omegaX*65535.0*3/math.pi)
         gyro[1] = int(omegaY*65535.0*3/math.pi)
         gyro[2] = int(omegaZ*65535.0*3/math.pi)
+
+        gyro = [0,0,10000]
+        
         self.gyro[0:2] = gyro[0].to_bytes(2,byteorder="little",signed=True)
         self.gyro[2:4] = gyro[1].to_bytes(2,byteorder="little",signed=True)
         self.gyro[4:6] = gyro[2].to_bytes(2,byteorder="little",signed=True)

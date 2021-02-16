@@ -85,20 +85,11 @@ class ControllerProtocol(BaseProtocol):
         else:
             r_stick = self._controller_state.r_stick_state
         input_report.set_stick_status(l_stick, r_stick)
-
-        if self._controller_state.axis_state is None:
-            accel = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-            gyro = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-        else:
-            accel = self._controller_state.axis_state.get_accel()
-            gyro = self._controller_state.axis_state.get_gyro()
-        input_report.set_6axis_data(accel,gyro)
         
 
         # set timer byte of input report
         input_report.set_timer(self._input_report_timer)
         self._input_report_timer = (self._input_report_timer + 1) % 0x100
-
         await self.transport.write(input_report)
 
         self._controller_state.sig_is_send.set()
@@ -185,7 +176,7 @@ class ControllerProtocol(BaseProtocol):
                     await asyncio.sleep(0.3)
                 else:
                     # write 0x30 input report.
-
+                    input_report.set_6axis_data(*self._controller_state.axis_state.get_6axis())
                     # TODO NFC - set nfc data
                     if input_report.get_input_report_id() == 0x31:
                         pass

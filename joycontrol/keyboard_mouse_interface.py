@@ -60,19 +60,19 @@ class KMI():
     
                     #left click -> ZR
                     if event.code == ecode.BTN_LEFT:
-                        self.button_state.zr(push)
+                        self.button_state.zr(pushed)
                     #right click -> ZL
                     elif event.code == ecode.BTN_RIGHT:
-                        self.button_state.zl(not push)
+                        self.button_state.zl(not pushed)
                     #middle click -> Y
                     if event.code == ecodes.BTN_MIDDLE:
-                        self.button_state.y(push)
+                        self.button_state.y(pushed)
 
             # parse keyboard event
             if kinput is not None:
                 # key input
                 if event.type == ecodes.EV_KEY:
-                    push = True
+                    pushed = True
                     if event.value == 0x01:#key down
                         pushed = True
                     elif event.value == 0x00:
@@ -90,36 +90,36 @@ class KMI():
 
                     #FVE -> a,b,x
                     elif event.code == ecodes.KEY_F:
-                        self.button_state.a(push)
+                        self.button_state.a(pushed)
                     elif event.code == ecodes.KEY_V:
-                        self.button_state.b(push)
+                        self.button_state.b(pushed)
                     elif event.code == ecodes.KEY_E:
-                        self.button_state.x(push)
+                        self.button_state.x(pushed)
 
                     #TG -> rstick, lstick
                     elif event.code == ecodes.KEY_T:
-                        self.button_state.sl(push)
+                        self.button_state.sl(pushed)
                     elif event.code == ecodes.KEY_G:
-                        self.button_state.sr(push)
+                        self.button_state.sr(pushed)
                     #QR -> l,r
                     elif event.code == ecodes.KEY_Q:
                         self.button_state.l(push)
                     elif event.code == ecodes.KEY_R:
-                        self.button_state.r(push)
+                        self.button_state.r(pushed)
                     #ZX -> plus, minus
                     elif event.code == ecodesKEY_Z:
-                        self.button_state.plus(push)
+                        self.button_state.minus(pushed)
                     elif event.code == ecodes.KEY_X:
-                        self.button_state.minus(push)
+                        self.button_state.plus(pushed)
                     #TAB -> zl
                     elif event.code == ecodes.KEY_TAB:
-                        self.button_state.zl(push)
+                        self.button_state.zl(pushed)
                     #SPACE -> b
                     elif event.code == ecodes.KEY_SPACE:
-                        self.button_state.b(push)
+                        self.button_state.b(pushed)
                     #esc -> home
                     elif event.code == ecodes.KEY_ESC:
-                        self.button_state.home(push)
+                        self.button_state.home(pushed)
 
                     #del -> break
                     elif event.code == ecodes.KEY_DELETE:

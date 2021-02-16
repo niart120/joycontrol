@@ -2,6 +2,8 @@ import inspect
 import logging
 import shlex
 import asyncio
+import sys
+import termios
 
 from evdev import InputDevice, ecodes
 
@@ -21,6 +23,15 @@ class KMI():
 
         self.mouse = InputDevice(mpath)
         self.keyboard = InputDevice(kpath)
+        self.mouse.grab()
+
+        fd = sys.stdin.fileno()
+        self.old = termios.tcgetattr(fd)
+        new = termios.tcgetattr(fd)
+        new[3] &= ~termios.ECHO
+        
+        termios.tcsetattr(fd,termios.TCSANOW,new)
+        
 
     async def run(self):
         while True:
@@ -112,10 +123,14 @@ class KMI():
 
                     #del -> break
                     elif event.code == ecode.KEY_DELETE:
-                        pass
+                        self.mouse.ungrab()
+                        termios.tcsetattr(sys.stdin.fileno(),termios.TCSANOW,self.old)
+                        return
         
             try:
                 await self.controller_state.send()
             except NotConnectedError:
                 logger.info('Connection was lost.')
+                self.mouse.ungrab()
+                termios.tcsetattr(sys.stdin.fileno(),termios.TCSANOW,self.old)
                 return

@@ -108,7 +108,6 @@ class InputReport:
         Set accelerator and gyro of 0x30 input reports
         TODO
         """
-        
         self.data[14:20] = accel_bytes
         self.data[20:26] = gyro_bytes
         self.data[26:32] = accel_bytes

@@ -403,6 +403,9 @@ class AxisState:
         self.accel[2:4] = ay.to_bytes(2,byteorder="little",singed=True)
         self.accel[4:6] = az.to_bytes(2,byteorder="little",singed=True)
 
+    def get_6axis(self):
+        return self.get_accel(), self.get_gyro()
+
     def get_accel(self):
         return self.accel
 

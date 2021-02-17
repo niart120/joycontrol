@@ -21,7 +21,15 @@ class FlashMemory:
             spi_flash_memory_data[0x603D:0x6046] = [0x00, 0x07, 0x70, 0x00, 0x08, 0x80, 0x00, 0x07, 0x70]
             # R-stick factory calibration
             spi_flash_memory_data[0x6046:0x604F] = [0x00, 0x08, 0x80, 0x00, 0x07, 0x70, 0x00, 0x07, 0x70]
-
+           
+            # Controller color
+            spi_flash_memory_data[0x6050:0x605C] = bytes.fromhex('0f0f0fc0c0c0efefefefefef')
+            # Factory Sensor and Stick device parameters
+            spi_flash_memory_data[0x6080:0x6098] = bytes.fromhex('50fd0000c60f0f30619630f3d41454411554c7799c333663')
+            # Stick device parameters 2
+            spi_flash_memory_data[0x6098:0x60AA] = bytes.fromhex('0f30619630f3d41454411554c7799c333663')
+            # User 6-Axis Motion Sensor calibration
+            spi_flash_memory_data[0x8028:0x8040] = bytes.fromhex('beff3e00f001004000400040fefffeff0800e73be73be73b')
         self.data = spi_flash_memory_data
 
     def __getitem__(self, item):

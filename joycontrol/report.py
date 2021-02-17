@@ -137,7 +137,7 @@ class InputReport:
         except ValueError:
             raise NotImplementedError(f'Sub command id {hex(self.data[11])} not implemented')
 
-    def sub_0x02_device_info(self, mac, fm_version=(0x04, 0x00), controller=Controller.JOYCON_L):
+    def sub_0x02_device_info(self, mac, fm_version=(0x05, 0x00), controller=Controller.JOYCON_L):
         """
         Sub command 0x02 request device info response.
 
